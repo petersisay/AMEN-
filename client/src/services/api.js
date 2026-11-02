@@ -18,9 +18,9 @@ export async function fetchChannel() {
  * Fetches uploaded videos with pagination support.
  * @param {Object} options
  * @param {string} [options.pageToken]
- * @param {number} [options.maxResults=50]
+ * @param {number} [options.maxResults=20]
  */
-export async function fetchVideos({ pageToken, maxResults = 50 } = {}) {
+export async function fetchVideos({ pageToken, maxResults = 20 } = {}) {
   const params = new URLSearchParams();
   if (maxResults) params.set('maxResults', maxResults.toString());
   if (pageToken) params.set('pageToken', pageToken);
