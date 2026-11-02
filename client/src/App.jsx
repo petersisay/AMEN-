@@ -71,11 +71,16 @@ export default function App() {
     ? `https://www.youtube.com/channel/${channel.id}`
     : 'https://www.youtube.com/@amenapostolicmedia';
 
+  const logoUrl =
+    channel?.thumbnails?.medium?.url ||
+    channel?.thumbnails?.default?.url ||
+    '/logo.png';
+
   const featuredVideo = videos[0] || null;
 
   return (
     <div className="amen-app">
-      <Header channelUrl={channelUrl} />
+      <Header channelUrl={channelUrl} logoUrl={logoUrl} />
 
       <main>
         {loading ? (
@@ -153,7 +158,7 @@ export default function App() {
         )}
       </main>
 
-      <Footer channelUrl={channelUrl} />
+      <Footer channelUrl={channelUrl} logoUrl={logoUrl} />
 
       {selectedVideo && (
         <VideoModal
