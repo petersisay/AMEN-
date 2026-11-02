@@ -628,8 +628,74 @@ button {
 .about-description {
   color: var(--text-secondary);
   font-size: 1rem;
-  line-height: 1.7;
+  line-height: 1.8;
   white-space: pre-line;
+}
+
+.text-link {
+  color: #38BDF8;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  word-break: break-all;
+  transition: color 0.15s ease;
+}
+
+.text-link:hover {
+  color: #60A5FA;
+}
+
+.inline-link-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.65rem;
+  margin: 0.25rem 0;
+  background-color: rgba(36, 161, 222, 0.15);
+  border: 1px solid rgba(36, 161, 222, 0.4);
+  border-radius: 8px;
+  color: #38BDF8;
+  font-weight: 500;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.inline-link-badge:hover {
+  background-color: rgba(36, 161, 222, 0.25);
+  border-color: #24A1DE;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.about-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 1.75rem;
+}
+
+.about-feature-item {
+  padding: 1.15rem;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.about-feature-item h4 {
+  font-size: 1rem;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.about-feature-item p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
 }
 
 .about-callout {
@@ -651,6 +717,27 @@ button {
   color: var(--text-secondary);
   font-size: 0.875rem;
   line-height: 1.5;
+}
+
+.btn-telegram {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  background: linear-gradient(135deg, #24A1DE, #1D8ABF);
+  color: #fff;
+  padding: 0.75rem 1.4rem;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 14px rgba(36, 161, 222, 0.25);
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.btn-telegram:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(36, 161, 222, 0.4);
 }
 
 /* Video Modal */
