@@ -1,4 +1,4 @@
-export default function Footer({ channelUrl }) {
+export default function Footer({ channelUrl, logoUrl }) {
   const currentYear = new Date().getFullYear();
 
   return (
@@ -6,7 +6,9 @@ export default function Footer({ channelUrl }) {
       <div className="container footer-inner">
         <div className="footer-brand">
           <div className="logo-wrapper" style={{ fontSize: '1.1rem' }}>
-            <span className="logo-badge" style={{ width: '1.8rem', height: '1.8rem', fontSize: '0.9rem' }}>✝</span>
+            <div className="logo-badge" style={{ width: '1.85rem', height: '1.85rem' }}>
+              <img src={logoUrl || '/logo.png'} alt="AMEN Logo" className="logo-img" />
+            </div>
             <span>AMEN<span className="logo-plus">+</span></span>
           </div>
           <span className="footer-copy">
