@@ -1,13 +1,15 @@
 import { useState } from 'react';
 
-export default function Header({ channelUrl }) {
+export default function Header({ channelUrl, logoUrl }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <header className="site-header">
       <div className="container header-inner">
         <a href="#home" className="logo-wrapper">
-          <span className="logo-badge">✝</span>
+          <div className="logo-badge">
+            <img src={logoUrl || '/logo.png'} alt="AMEN Logo" className="logo-img" />
+          </div>
           <div className="logo-text">
             <span>AMEN</span>
             <span className="logo-plus">+</span>
