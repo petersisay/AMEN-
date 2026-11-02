@@ -26,7 +26,7 @@ export default function App() {
     try {
       const [channelData, videosData] = await Promise.all([
         fetchChannel(),
-        fetchVideos({ maxResults: 50 })
+        fetchVideos({ maxResults: 20 })
       ]);
 
       setChannel(channelData);
@@ -50,7 +50,7 @@ export default function App() {
 
     setLoadingMore(true);
     try {
-      const data = await fetchVideos({ pageToken: nextPageToken, maxResults: 50 });
+      const data = await fetchVideos({ pageToken: nextPageToken, maxResults: 10 });
       setVideos((prevVideos) => {
         const existingIds = new Set(prevVideos.map((v) => v.id));
         const newUnique = data.videos.filter((v) => !existingIds.has(v.id));
