@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const youtubeRoutes = require('./routes/youtubeRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -21,6 +22,9 @@ app.get('/api/health', (req, res) => {
     timestamp: new Date().toISOString()
   });
 });
+
+// YouTube API routes
+app.use('/api/youtube', youtubeRoutes);
 
 // Start server
 if (require.main === module) {
