@@ -1,12 +1,53 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 export default function VideoModal({ video, onClose }) {
+  const modalRef = useRef(null);
+  const closeBtnRef = useRef(null);
+
+  useEffect(() => {
+    const previousActiveElement = document.activeElement;
+    closeBtnRef.current?.focus();
+
+    return () => {
+      if (previousActiveElement && typeof previousActiveElement.focus === 'function') {
+        previousActiveElement.focus();
+      }
+    };
+  }, []);
+
   useEffect(() => {
     function handleKeyDown(e) {
       if (e.key === 'Escape') {
         onClose();
+        return;
+      }
+
+      if (e.key === 'Tab') {
+        const modalEl = modalRef.current;
+        if (!modalEl) return;
+
+        const focusableElements = modalEl.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusableElements.length === 0) return;
+
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement.focus();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement.focus();
+          }
+        }
       }
     }
+
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
@@ -29,18 +70,19 @@ export default function VideoModal({ video, onClose }) {
       }}
       role="dialog"
       aria-modal="true"
-      aria-label={video.title}
+      aria-labelledby="modal-video-title"
     >
-      <div className="modal-content">
+      <div className="modal-content" ref={modalRef}>
         <div className="modal-header">
-          <h2 className="modal-header-title">{video.title}</h2>
+          <h2 className="modal-header-title" id="modal-video-title">{video.title}</h2>
           <button
             type="button"
+            ref={closeBtnRef}
             className="btn-close-modal"
             onClick={onClose}
             aria-label="Close video player"
           >
-            ✕
+            <span aria-hidden="true">✕</span>
           </button>
         </div>
 
