@@ -1,0 +1,5 @@
+# robots.txt for AMEN+
+User-agent: *
+Allow: /
+
+Sitemap: https://amen-plus.vercel.app/sitemap.xml
