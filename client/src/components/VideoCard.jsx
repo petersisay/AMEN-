@@ -36,7 +36,7 @@ export default function VideoCard({ video, onSelect }) {
         )}
         <div className="thumbnail-overlay">
           <div className="card-play-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M8 5v14l11-7z" />
             </svg>
           </div>
@@ -49,7 +49,7 @@ export default function VideoCard({ video, onSelect }) {
         </h3>
         {formattedDate && (
           <div className="card-meta">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
               <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
               <line x1="16" y1="2" x2="16" y2="6"/>
               <line x1="8" y1="2" x2="8" y2="6"/>
