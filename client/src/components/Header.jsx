@@ -32,7 +32,7 @@ export default function Header({ channelUrl, logoUrl }) {
               className="btn-youtube-link"
             >
               <span>YouTube</span>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 <path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/>
               </svg>
             </a>
@@ -42,6 +42,8 @@ export default function Header({ channelUrl, logoUrl }) {
             className="mobile-menu-btn"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle navigation menu"
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-nav"
           >
             {mobileMenuOpen ? '✕' : '☰'}
           </button>
@@ -49,7 +51,7 @@ export default function Header({ channelUrl, logoUrl }) {
       </div>
 
       {mobileMenuOpen && (
-        <div className="mobile-nav open">
+        <nav id="mobile-nav" className="mobile-nav open" aria-label="Mobile Navigation">
           <a
             href="#home"
             className="nav-link"
@@ -71,7 +73,7 @@ export default function Header({ channelUrl, logoUrl }) {
           >
             About
           </a>
-        </div>
+        </nav>
       )}
     </header>
   );
