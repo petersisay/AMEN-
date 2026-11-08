@@ -304,31 +304,6 @@ Open your browser and navigate to `http://localhost:5173`.
 
 ---
 
-## 🌐 Production Deployment
-
-### Frontend (Vercel)
-1. Link repository to [Vercel](https://vercel.com).
-2. Set **Root Directory** to `client`.
-3. Set **Framework Preset** to `Vite`.
-4. Define Environment Variable:
-   - `VITE_API_BASE_URL`: `https://amen-plus-api.onrender.com/api`
-5. Deploy.
-
-### Backend (Render)
-1. Create a new **Web Service** on [Render](https://render.com).
-2. Set **Root Directory** to `server`.
-3. Set **Build Command** to `npm install`.
-4. Set **Start Command** to `node src/app.js`.
-5. Define Environment Variables:
-   - `PORT`: (Set automatically by Render)
-   - `CLIENT_URL`: `https://amen-plus.vercel.app,http://localhost:5173`
-   - `YOUTUBE_API_KEY`: Your Google Cloud YouTube Data API v3 key
-   - `YOUTUBE_CHANNEL_ID`: `UCGWqiRHa7VqmPfIiCJcW4lw`
-   - `YOUTUBE_UPLOADS_PLAYLIST_ID`: `UUGWqiRHa7VqmPfIiCJcW4lw`
-6. Set health check endpoint to `/api/health`.
-
----
-
 ## 🔒 Security Architecture
 
 - **Server-Side Credential Isolation**: The Google Cloud `YOUTUBE_API_KEY` is loaded exclusively inside the Node.js process and never bundled into client JavaScript.
