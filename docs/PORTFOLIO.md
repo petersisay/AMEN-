@@ -2,7 +2,7 @@
 
 > **Project Name**: AMEN+ (አሜን+) — Apostolic Media Streaming Platform  
 > **Live Web Application**: [https://amen-plus.vercel.app/](https://amen-plus.vercel.app/)  
-> **Production API Service**: Node.js & Express REST Proxy on Render (Strict Origin Whitelist)  
+> **Production API Service**: [https://amen-plus-api.onrender.com/api/health](https://amen-plus-api.onrender.com/api/health)  
 > **GitHub Repository**: [https://github.com/petersisay/AMEN-](https://github.com/petersisay/AMEN-)  
 > **Ministry Partner**: [አሜን - AMEN (Apostolic Church of Ethiopia)](https://www.youtube.com/@amenapostolicmedia)  
 
