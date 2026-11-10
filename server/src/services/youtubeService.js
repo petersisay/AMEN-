@@ -21,6 +21,30 @@ function validateApiKey() {
 }
 
 /**
+ * Validates that the YouTube channel ID is configured.
+ */
+function validateChannelId() {
+  if (!config.channelId) {
+    const error = new Error('YouTube Channel ID is not configured in server/.env');
+    error.statusCode = 500;
+    error.code = 'CHANNEL_ID_MISSING';
+    throw error;
+  }
+}
+
+/**
+ * Validates that the YouTube uploads playlist ID is configured.
+ */
+function validateUploadsPlaylistId() {
+  if (!config.uploadsPlaylistId) {
+    const error = new Error('YouTube Uploads Playlist ID is not configured in server/.env');
+    error.statusCode = 500;
+    error.code = 'PLAYLIST_ID_MISSING';
+    throw error;
+  }
+}
+
+/**
  * Helper to fetch from YouTube API and safely parse errors.
  */
 async function fetchFromYouTube(endpoint, params = {}) {
@@ -76,6 +100,8 @@ async function fetchFromYouTube(endpoint, params = {}) {
  * Retrieves AMEN channel information.
  */
 async function getChannel() {
+  validateChannelId();
+
   const data = await fetchFromYouTube('channels', {
     part: 'snippet,contentDetails,statistics',
     id: config.channelId
@@ -109,6 +135,8 @@ async function getChannel() {
  * Retrieves uploaded videos from the AMEN channel uploads playlist.
  */
 async function getVideos({ pageToken, maxResults = 50 } = {}) {
+  validateUploadsPlaylistId();
+
   const parsedLimit = Math.min(Math.max(parseInt(maxResults, 10) || 50, 1), 50);
 
   const params = {

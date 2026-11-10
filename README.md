@@ -12,7 +12,7 @@
   [![YouTube Data API](https://img.shields.io/badge/YouTube%20API-v3-FF0000?logo=youtube&logoColor=white)](https://developers.google.com/youtube/v3)
   [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-  **[Live Website](https://amen-plus.vercel.app/)** • **[Production API](https://amen-plus-api.onrender.com/api/health)** • **[Official YouTube Channel](https://www.youtube.com/@amenapostolicmedia)** • **[Telegram](https://t.me/AmenApostolicMedia)**
+  **[Live Website](https://amen-plus.vercel.app/)** • **[Official YouTube Channel](https://www.youtube.com/@amenapostolicmedia)** • **[Telegram](https://t.me/AmenApostolicMedia)**
 
 </div>
 
@@ -134,7 +134,7 @@ flowchart TD
 ## ⚙️ How the Application Works
 
 1. **Initial Mount & Concurrent Fetching**: When a user accesses the platform, `App.jsx` initiates a concurrent `Promise.all` request to `fetchChannel()` and `fetchVideos({ maxResults: 20 })`.
-2. **Backend Proxy Routing**: The request travels to the Express backend (`https://amen-plus-api.onrender.com/api`). The `cors` middleware verifies that the incoming `Origin` matches an authorized frontend domain.
+2. **Backend Proxy Routing**: The request travels to the Express backend proxy. The `cors` middleware verifies that the incoming `Origin` matches an authorized frontend domain.
 3. **Upstream Data Ingestion**: The backend `youtubeService` validates its local `YOUTUBE_API_KEY` and dispatches authenticated requests to Google's `channels` and `playlistItems` endpoints.
 4. **Data Normalization & Error Redaction**: Raw YouTube responses are filtered to discard private or deleted videos. Any error messages returned from Google Cloud are stripped of API keys using a regex sanitizer before reaching the browser.
 5. **UI Rendering**: The client populates the latest media item into the featured `Hero` spotlight, fills the `ChannelBar` with live metrics, and renders the 20 items in a responsive grid.
@@ -218,7 +218,7 @@ All backend endpoints are served under `/api`:
 {
   "success": true,
   "data": {
-    "id": "UCGWqiRHa7VqmPfIiCJcW4lw",
+    "id": "UC_CHANNEL_ID_REDACTED",
     "title": "አሜን - AMEN",
     "description": "የኢትዮጵያ ሐዋርያዊት ቤተክርስቲያን መልቲሚዲያ አገልግሎት\n\nhttps://t.me/AmenApostolicMedia\n",
     "customUrl": "@amenapostolicmedia",
@@ -227,7 +227,7 @@ All backend endpoints are served under `/api`:
       "subscriberCount": "27000",
       "videoCount": "110"
     },
-    "uploadsPlaylistId": "UUGWqiRHa7VqmPfIiCJcW4lw"
+    "uploadsPlaylistId": "UU_PLAYLIST_ID_REDACTED"
   }
 }
 ```
@@ -243,21 +243,21 @@ Create a `.env` file inside `server/` based on `server/.env.example`:
 PORT=5000
 
 # Allowed Frontend Origins (supports comma-separated origins)
-CLIENT_URL=http://localhost:5173,https://amen-plus.vercel.app
+CLIENT_URL=http://localhost:5173,https://your-frontend-domain.vercel.app
 
 # Google Cloud YouTube Data API v3 Key
 YOUTUBE_API_KEY=your_google_cloud_youtube_api_key_here
 
 # Channel & Uploads Playlist Identifiers
-YOUTUBE_CHANNEL_ID=UCGWqiRHa7VqmPfIiCJcW4lw
-YOUTUBE_UPLOADS_PLAYLIST_ID=UUGWqiRHa7VqmPfIiCJcW4lw
+YOUTUBE_CHANNEL_ID=your_youtube_channel_id_here
+YOUTUBE_UPLOADS_PLAYLIST_ID=your_youtube_uploads_playlist_id_here
 ```
 
 The frontend uses Vite environment variables (optional for local development, defaults to relative or localhost proxy):
 
 ```ini
 # client/.env (Optional in production)
-VITE_API_BASE_URL=https://amen-plus-api.onrender.com/api
+VITE_API_BASE_URL=https://<your-backend-api>.onrender.com/api
 ```
 
 ---
