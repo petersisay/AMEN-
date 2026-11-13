@@ -28,6 +28,7 @@ export default function VideoCard({ video, onSelect }) {
             alt={video.title}
             className="video-thumbnail"
             loading="lazy"
+            decoding="async"
           />
         ) : (
           <div className="video-thumbnail" style={{ background: '#0F172A' }} />

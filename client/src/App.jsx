@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import ChannelBar from './components/ChannelBar';
@@ -6,25 +6,31 @@ import VideoCard from './components/VideoCard';
 import VideoModal from './components/VideoModal';
 import AboutSection from './components/AboutSection';
 import Footer from './components/Footer';
-import { fetchChannel, fetchVideos } from './services/api';
+import { fetchChannel, fetchVideos, getCachedInitialData } from './services/api';
 import { useLanguage } from './context/LanguageContext';
 
 export default function App() {
   const { t, language } = useLanguage();
 
-  const [channel, setChannel] = useState(null);
-  const [videos, setVideos] = useState([]);
-  const [nextPageToken, setNextPageToken] = useState(null);
-  const [totalResults, setTotalResults] = useState(0);
+  // Instant SWR cache initialization for 0ms initial opening
+  const cachedInitial = useMemo(() => getCachedInitialData(), []);
 
-  const [loading, setLoading] = useState(true);
+  const [channel, setChannel] = useState(() => cachedInitial?.channel || null);
+  const [videos, setVideos] = useState(() => cachedInitial?.videosData?.videos || []);
+  const [nextPageToken, setNextPageToken] = useState(() => cachedInitial?.videosData?.nextPageToken || null);
+  const [totalResults, setTotalResults] = useState(
+    () => cachedInitial?.videosData?.pageInfo?.totalResults || cachedInitial?.videosData?.videos?.length || 0
+  );
+
+  // If cached data is present, loading starts as false for instant paint!
+  const [loading, setLoading] = useState(() => !cachedInitial);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState(null);
 
   const [selectedVideo, setSelectedVideo] = useState(null);
 
-  const loadInitialData = useCallback(async () => {
-    setLoading(true);
+  const loadInitialData = useCallback(async (isBackground = false) => {
+    if (!isBackground) setLoading(true);
     setError(null);
     try {
       const [channelData, videosData] = await Promise.all([
@@ -38,15 +44,20 @@ export default function App() {
       setTotalResults(videosData.pageInfo?.totalResults || videosData.videos.length);
     } catch (err) {
       console.error('Error loading AMEN+ data:', err);
-      setError(err.message || 'Unable to connect to the AMEN+ backend.');
+      // Only set error on the screen if we don't have cached data to show
+      if (!isBackground) {
+        setError(err.message || 'Unable to connect to the AMEN+ backend.');
+      }
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    loadInitialData();
-  }, [loadInitialData]);
+    // If cached data was available, run fetch silently in background (Stale-While-Revalidate)
+    const hasCache = Boolean(cachedInitial);
+    loadInitialData(hasCache);
+  }, [loadInitialData, cachedInitial]);
 
   const handleLoadMore = async () => {
     if (!nextPageToken || loadingMore) return;
@@ -91,16 +102,20 @@ export default function App() {
 
       <main>
         {loading ? (
-          <div className="state-container">
-            <div className="spinner" />
-            <h2 className="state-title">{t('states.loadingTitle')}</h2>
-            <p className="state-desc">{t('states.loadingDesc')}</p>
+          <div className="skeleton-container container" aria-busy="true" aria-label={t('states.loadingTitle')}>
+            <div className="skeleton-hero shimmer" />
+            <div className="skeleton-channel-bar shimmer" />
+            <div className="skeleton-grid">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="skeleton-card shimmer" />
+              ))}
+            </div>
           </div>
         ) : error ? (
           <div className="state-container">
             <div className="state-title" style={{ color: '#EF4444' }}>{t('states.errorTitle')}</div>
             <p className="state-desc">{error}</p>
-            <button type="button" className="btn-primary" onClick={loadInitialData}>
+            <button type="button" className="btn-primary" onClick={() => loadInitialData(false)}>
               {t('states.retryBtn')}
             </button>
           </div>

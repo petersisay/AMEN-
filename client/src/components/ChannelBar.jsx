@@ -29,6 +29,8 @@ export default function ChannelBar({ channel }) {
                 src={avatarUrl}
                 alt={channel.title}
                 className="channel-avatar"
+                loading="lazy"
+                decoding="async"
               />
             )}
             <div className="channel-details">

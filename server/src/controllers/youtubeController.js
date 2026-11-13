@@ -1,11 +1,15 @@
 const youtubeService = require('../services/youtubeService');
 
+// HTTP Cache-Control: 5 min browser, 10 min CDN, 20 min stale-while-revalidate
+const CACHE_CONTROL_HEADER = 'public, max-age=300, s-maxage=600, stale-while-revalidate=1200';
+
 /**
  * Controller to get AMEN channel information.
  */
 async function getChannel(req, res) {
   try {
     const channel = await youtubeService.getChannel();
+    res.setHeader('Cache-Control', CACHE_CONTROL_HEADER);
     return res.status(200).json({
       success: true,
       data: channel
@@ -47,6 +51,7 @@ async function getVideos(req, res) {
       maxResults
     });
 
+    res.setHeader('Cache-Control', CACHE_CONTROL_HEADER);
     return res.status(200).json({
       success: true,
       videos: result.videos,

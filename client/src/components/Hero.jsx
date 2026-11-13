@@ -32,6 +32,8 @@ export default function Hero({ video, onWatch }) {
                 alt={video.title}
                 className="hero-image"
                 loading="eager"
+                fetchPriority="high"
+                decoding="async"
               />
             )}
             <div className="hero-play-overlay">
