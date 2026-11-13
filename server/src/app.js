@@ -8,7 +8,14 @@ const PORT = process.env.PORT || 5000;
 
 // Strict CORS: Allow only exact origins explicitly listed in CLIENT_URL plus local development
 // Wildcards (*) are strictly filtered out to prevent granting arbitrary origin access
-const defaultOrigins = ['http://localhost:5173'];
+const defaultOrigins = [
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+  'http://localhost:4173',
+  'http://127.0.0.1:4173',
+  'http://localhost:5299',
+  'http://127.0.0.1:5299'
+];
 const configuredOrigins = process.env.CLIENT_URL
   ? process.env.CLIENT_URL.split(',')
       .map((url) => url.trim())
