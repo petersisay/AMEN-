@@ -9,6 +9,7 @@ import Footer from './components/Footer';
 import SplashLoader from './components/SplashLoader';
 import { fetchChannel, fetchVideos, getCachedInitialData } from './services/api';
 import { useLanguage } from './context/LanguageContext';
+import { filterVideos } from './utils/search';
 
 export default function App() {
   const { t, language } = useLanguage();
@@ -22,6 +23,9 @@ export default function App() {
   const [totalResults, setTotalResults] = useState(
     () => cachedInitial?.videosData?.pageInfo?.totalResults || cachedInitial?.videosData?.videos?.length || 0
   );
+
+  // Approximate search filter
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Animated brand logo preloader
   const [showSplash, setShowSplash] = useState(true);
@@ -107,9 +111,18 @@ export default function App() {
 
   const featuredVideo = videos[0] || null;
 
+  const filteredVideos = useMemo(() => {
+    return filterVideos(videos, searchQuery);
+  }, [videos, searchQuery]);
+
+  const isSearching = Boolean(searchQuery.trim());
   const numLocale = language === 'am' ? 'am-ET' : 'en-US';
-  const displayCount = videos.length.toLocaleString(numLocale);
+  const displayCount = filteredVideos.length.toLocaleString(numLocale);
   const displayTotal = (totalResults || videos.length).toLocaleString(numLocale);
+
+  const subtitleText = isSearching
+    ? t('mediaGrid.searchCount', { count: displayCount, query: searchQuery.trim() })
+    : t('mediaGrid.subtitle', { count: displayCount, total: displayTotal });
 
   return (
     <div className="amen-app">
@@ -155,23 +168,89 @@ export default function App() {
                 <div className="section-header">
                   <div className="section-title-wrap">
                     <h2 className="section-title">{t('mediaGrid.title')}</h2>
-                    <span className="section-subtitle">
-                      {t('mediaGrid.subtitle', { count: displayCount, total: displayTotal })}
-                    </span>
+                    <span className="section-subtitle">{subtitleText}</span>
+                  </div>
+
+                  <div className="video-search-wrap">
+                    <div className="search-input-group">
+                      <svg
+                        className="search-icon"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        aria-hidden="true"
+                      >
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                      </svg>
+                      <input
+                        type="text"
+                        className="search-input"
+                        placeholder={t('mediaGrid.searchPlaceholder')}
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        aria-label={t('mediaGrid.searchAria')}
+                      />
+                      {searchQuery && (
+                        <button
+                          type="button"
+                          className="search-clear-btn"
+                          onClick={() => setSearchQuery('')}
+                          aria-label={t('mediaGrid.clearSearch')}
+                          title={t('mediaGrid.clearSearch')}
+                        >
+                          ✕
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
 
-                <div className="video-grid">
-                  {videos.map((video) => (
-                    <VideoCard
-                      key={video.id}
-                      video={video}
-                      onSelect={setSelectedVideo}
-                    />
-                  ))}
-                </div>
+                {filteredVideos.length > 0 ? (
+                  <div className="video-grid">
+                    {filteredVideos.map((video) => (
+                      <VideoCard
+                        key={video.id}
+                        video={video}
+                        onSelect={setSelectedVideo}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="search-empty-state">
+                    <div className="search-empty-icon-wrap">
+                      <svg
+                        width="44"
+                        height="44"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="var(--accent-gold)"
+                        strokeWidth="1.75"
+                        aria-hidden="true"
+                      >
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        <line x1="8" y1="11" x2="14" y2="11" />
+                      </svg>
+                    </div>
+                    <h3 className="search-empty-title">{t('mediaGrid.noResultsTitle')}</h3>
+                    <p className="search-empty-desc">
+                      {t('mediaGrid.noResultsDesc', { query: searchQuery })}
+                    </p>
+                    <button
+                      type="button"
+                      className="btn-reset-search"
+                      onClick={() => setSearchQuery('')}
+                    >
+                      {t('mediaGrid.resetSearch')}
+                    </button>
+                  </div>
+                )}
 
-                {nextPageToken && (
+                {nextPageToken && !isSearching && (
                   <div className="load-more-wrapper">
                     <button
                       type="button"
