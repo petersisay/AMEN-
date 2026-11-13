@@ -10,7 +10,13 @@ export default function Header({ channelUrl, logoUrl }) {
       <div className="container header-inner">
         <a href="#home" className="logo-wrapper">
           <div className="logo-badge">
-            <img src={logoUrl || '/logo.png'} alt="AMEN Logo" className="logo-img" />
+            <img
+              src={logoUrl || '/logo.png'}
+              alt="AMEN Logo"
+              className="logo-img"
+              width="38"
+              height="38"
+            />
           </div>
           <div className="logo-text">
             <span>AMEN</span>
