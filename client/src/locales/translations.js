@@ -36,6 +36,13 @@ export const translations = {
     mediaGrid: {
       title: 'የቅርብ ጊዜ ዝማሬዎችና ስብከቶች',
       subtitle: 'ከ {total} ሐዋርያዊ ትምህርቶችና መዝሙራት ውስጥ {count} እየታዩ ነው',
+      searchPlaceholder: 'በቪዲዮ ርዕስ ወይም ይዘት ፈልግ...',
+      searchAria: 'ቪዲዮዎችን ይፈልጉ',
+      clearSearch: 'ፍለጋውን አጽዳ',
+      searchCount: 'ለ "{query}" የተገኙ {count} ቪዲዮዎች',
+      noResultsTitle: 'ምንም የተገኘ ቪዲዮ የለም',
+      noResultsDesc: 'ለ "{query}" የሚዛመድ ቪዲዮ አልተገኘም። እባክዎ በሌላ ቃል ወይም የፊደል አጻጻፍ ይሞክሩ።',
+      resetSearch: 'ሁሉንም ቪዲዮዎች አሳይ',
       loadMore: 'ተጨማሪ ቪዲዮዎችን ጫን',
       loadingMore: 'በመጫን ላይ...',
       playAria: 'ቪዲዮ አጫውት፦ {title}'
@@ -116,6 +123,13 @@ export const translations = {
     mediaGrid: {
       title: 'Latest Media Releases',
       subtitle: 'Showing {count} of {total} apostolic teachings and messages',
+      searchPlaceholder: 'Search by title, topic, or keyword...',
+      searchAria: 'Search videos',
+      clearSearch: 'Clear search',
+      searchCount: 'Showing {count} results for "{query}"',
+      noResultsTitle: 'No Matching Videos Found',
+      noResultsDesc: 'No videos matched "{query}". Try checking your spelling or using different keywords.',
+      resetSearch: 'Show All Videos',
       loadMore: 'Load More Videos',
       loadingMore: 'Loading more...',
       playAria: 'Play {title}'
