@@ -6,13 +6,14 @@ import VideoCard from './components/VideoCard';
 import VideoModal from './components/VideoModal';
 import AboutSection from './components/AboutSection';
 import Footer from './components/Footer';
+import SplashLoader from './components/SplashLoader';
 import { fetchChannel, fetchVideos, getCachedInitialData } from './services/api';
 import { useLanguage } from './context/LanguageContext';
 
 export default function App() {
   const { t, language } = useLanguage();
 
-  // Instant SWR cache initialization for 0ms initial opening
+  // Instant SWR cache initialization for fast initial opening
   const cachedInitial = useMemo(() => getCachedInitialData(), []);
 
   const [channel, setChannel] = useState(() => cachedInitial?.channel || null);
@@ -22,7 +23,9 @@ export default function App() {
     () => cachedInitial?.videosData?.pageInfo?.totalResults || cachedInitial?.videosData?.videos?.length || 0
   );
 
-  // If cached data is present, loading starts as false for instant paint!
+  // Animated brand logo preloader
+  const [showSplash, setShowSplash] = useState(true);
+
   const [loading, setLoading] = useState(() => !cachedInitial);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState(null);
@@ -58,6 +61,18 @@ export default function App() {
     const hasCache = Boolean(cachedInitial);
     loadInitialData(hasCache);
   }, [loadInitialData, cachedInitial]);
+
+  const handleRetry = useCallback(() => {
+    setError(null);
+    setShowSplash(true);
+    loadInitialData(false);
+  }, [loadInitialData]);
+
+  const handleSplashComplete = useCallback(() => {
+    setShowSplash(false);
+  }, []);
+
+  const isDataReady = Boolean(channel && videos && videos.length > 0 && !error);
 
   const handleLoadMore = async () => {
     if (!nextPageToken || loadingMore) return;
@@ -98,6 +113,14 @@ export default function App() {
 
   return (
     <div className="amen-app">
+      {showSplash && (
+        <SplashLoader
+          logoUrl={logoUrl}
+          isReady={isDataReady}
+          onComplete={handleSplashComplete}
+        />
+      )}
+
       <Header channelUrl={channelUrl} logoUrl={logoUrl} />
 
       <main>
@@ -115,7 +138,7 @@ export default function App() {
           <div className="state-container">
             <div className="state-title" style={{ color: '#EF4444' }}>{t('states.errorTitle')}</div>
             <p className="state-desc">{error}</p>
-            <button type="button" className="btn-primary" onClick={() => loadInitialData(false)}>
+            <button type="button" className="btn-primary" onClick={handleRetry}>
               {t('states.retryBtn')}
             </button>
           </div>
