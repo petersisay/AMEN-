@@ -7,8 +7,11 @@ import VideoModal from './components/VideoModal';
 import AboutSection from './components/AboutSection';
 import Footer from './components/Footer';
 import { fetchChannel, fetchVideos } from './services/api';
+import { useLanguage } from './context/LanguageContext';
 
 export default function App() {
+  const { t, language } = useLanguage();
+
   const [channel, setChannel] = useState(null);
   const [videos, setVideos] = useState([]);
   const [nextPageToken, setNextPageToken] = useState(null);
@@ -59,7 +62,7 @@ export default function App() {
       setNextPageToken(data.nextPageToken);
     } catch (err) {
       console.error('Error loading more videos:', err);
-      alert(`Could not load more videos: ${err.message}`);
+      alert(t('states.loadMoreError', { error: err.message }));
     } finally {
       setLoadingMore(false);
     }
@@ -78,6 +81,10 @@ export default function App() {
 
   const featuredVideo = videos[0] || null;
 
+  const numLocale = language === 'am' ? 'am-ET' : 'en-US';
+  const displayCount = videos.length.toLocaleString(numLocale);
+  const displayTotal = (totalResults || videos.length).toLocaleString(numLocale);
+
   return (
     <div className="amen-app">
       <Header channelUrl={channelUrl} logoUrl={logoUrl} />
@@ -86,15 +93,15 @@ export default function App() {
         {loading ? (
           <div className="state-container">
             <div className="spinner" />
-            <h2 className="state-title">Loading AMEN+ Media...</h2>
-            <p className="state-desc">Connecting to Apostolic media streaming catalogue.</p>
+            <h2 className="state-title">{t('states.loadingTitle')}</h2>
+            <p className="state-desc">{t('states.loadingDesc')}</p>
           </div>
         ) : error ? (
           <div className="state-container">
-            <div className="state-title" style={{ color: '#EF4444' }}>Backend Connection Error</div>
+            <div className="state-title" style={{ color: '#EF4444' }}>{t('states.errorTitle')}</div>
             <p className="state-desc">{error}</p>
             <button type="button" className="btn-primary" onClick={loadInitialData}>
-              Retry Connection
+              {t('states.retryBtn')}
             </button>
           </div>
         ) : (
@@ -109,9 +116,9 @@ export default function App() {
               <div className="container">
                 <div className="section-header">
                   <div className="section-title-wrap">
-                    <h2 className="section-title">Latest Media Releases</h2>
+                    <h2 className="section-title">{t('mediaGrid.title')}</h2>
                     <span className="section-subtitle">
-                      Showing {videos.length} of {totalResults || videos.length} apostolic teachings and messages
+                      {t('mediaGrid.subtitle', { count: displayCount, total: displayTotal })}
                     </span>
                   </div>
                 </div>
@@ -137,14 +144,14 @@ export default function App() {
                       {loadingMore ? (
                         <>
                           <div className="spinner" style={{ width: '1.2rem', height: '1.2rem', margin: 0, borderWidth: '2px' }} />
-                          <span>Loading more...</span>
+                          <span>{t('mediaGrid.loadingMore')}</span>
                         </>
                       ) : (
                         <>
                           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <polyline points="6 9 12 15 18 9"/>
                           </svg>
-                          <span>Load More Videos</span>
+                          <span>{t('mediaGrid.loadMore')}</span>
                         </>
                       )}
                     </button>

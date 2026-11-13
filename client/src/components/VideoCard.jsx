@@ -1,16 +1,14 @@
+import { useLanguage } from '../context/LanguageContext';
+
 export default function VideoCard({ video, onSelect }) {
+  const { t, formatDate } = useLanguage();
+
   const thumbnailUrl =
     video.thumbnails?.high?.url ||
     video.thumbnails?.medium?.url ||
     video.thumbnails?.default?.url;
 
-  const formattedDate = video.publishedAt
-    ? new Date(video.publishedAt).toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-      })
-    : '';
+  const formattedDate = formatDate(video.publishedAt);
 
   return (
     <div
@@ -21,7 +19,7 @@ export default function VideoCard({ video, onSelect }) {
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') onSelect(video);
       }}
-      aria-label={`Play ${video.title}`}
+      aria-label={t('mediaGrid.playAria', { title: video.title })}
     >
       <div className="thumbnail-wrapper">
         {thumbnailUrl ? (

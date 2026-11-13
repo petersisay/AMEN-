@@ -222,6 +222,46 @@ button {
   color: #ffffff;
 }
 
+/* Language Toggle Button */
+.btn-lang-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background-color: rgba(214, 180, 92, 0.08);
+  border: 1px solid var(--accent-gold);
+  color: var(--accent-gold);
+  padding: 0.42rem 0.85rem;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: 0.01em;
+}
+
+.btn-lang-toggle:hover {
+  background-color: var(--accent-gold);
+  color: #0A211C;
+  box-shadow: 0 0 14px var(--accent-glow);
+  transform: translateY(-1px);
+}
+
+.btn-lang-toggle:active {
+  transform: translateY(0);
+}
+
+.btn-lang-toggle:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 2px;
+}
+
+.mobile-lang-toggle {
+  display: inline-flex;
+  align-self: flex-start;
+  margin-top: 0.5rem;
+  padding: 0.6rem 1.15rem;
+  font-size: 0.9rem;
+}
+
 .mobile-menu-btn {
   display: none;
   color: var(--text-primary);

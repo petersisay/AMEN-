@@ -1,5 +1,8 @@
+import { useLanguage } from '../context/LanguageContext';
+
 export default function Footer({ channelUrl, logoUrl }) {
   const currentYear = new Date().getFullYear();
+  const { t } = useLanguage();
 
   return (
     <footer className="site-footer">
@@ -12,14 +15,14 @@ export default function Footer({ channelUrl, logoUrl }) {
             <span>AMEN<span className="logo-plus">+</span></span>
           </div>
           <span className="footer-copy">
-            © {currentYear} አሜን (AMEN) Media Ministry. All rights reserved.
+            {t('footer.copyright', { year: currentYear })}
           </span>
         </div>
 
         <div className="footer-links">
-          <a href="#home" className="footer-link">Home</a>
-          <a href="#videos" className="footer-link">Videos</a>
-          <a href="#about" className="footer-link">About</a>
+          <a href="#home" className="footer-link">{t('nav.home')}</a>
+          <a href="#videos" className="footer-link">{t('nav.videos')}</a>
+          <a href="#about" className="footer-link">{t('nav.about')}</a>
           {channelUrl && (
             <a
               href={channelUrl}
@@ -27,7 +30,7 @@ export default function Footer({ channelUrl, logoUrl }) {
               rel="noopener noreferrer"
               className="footer-link"
             >
-              Official YouTube Channel
+              {t('footer.officialYoutube')}
             </a>
           )}
         </div>

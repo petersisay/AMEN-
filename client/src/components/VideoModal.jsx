@@ -1,8 +1,10 @@
 import { useEffect, useRef } from 'react';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function VideoModal({ video, onClose }) {
   const modalRef = useRef(null);
   const closeBtnRef = useRef(null);
+  const { t, formatDate } = useLanguage();
 
   useEffect(() => {
     const previousActiveElement = document.activeElement;
@@ -54,13 +56,7 @@ export default function VideoModal({ video, onClose }) {
 
   if (!video) return null;
 
-  const formattedDate = video.publishedAt
-    ? new Date(video.publishedAt).toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      })
-    : '';
+  const formattedDate = formatDate(video.publishedAt, { month: 'long' });
 
   return (
     <div
@@ -80,7 +76,7 @@ export default function VideoModal({ video, onClose }) {
             ref={closeBtnRef}
             className="btn-close-modal"
             onClick={onClose}
-            aria-label="Close video player"
+            aria-label={t('modal.closeAria')}
           >
             <span aria-hidden="true">✕</span>
           </button>
@@ -98,8 +94,8 @@ export default function VideoModal({ video, onClose }) {
 
         <div className="modal-body">
           <div className="modal-meta-row">
-            <span>{video.channelTitle || 'አሜን - AMEN'}</span>
-            {formattedDate && <span>Published on {formattedDate}</span>}
+            <span>{video.channelTitle || t('modal.channelDefault')}</span>
+            {formattedDate && <span>{t('modal.publishedOn', { date: formattedDate })}</span>}
           </div>
 
           {video.description && (
