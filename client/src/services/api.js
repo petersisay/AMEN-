@@ -1,4 +1,8 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ||
+  'https://amen-plus-api.onrender.com/api';
+
+const FALLBACK_PROD_URL = 'https://amen-plus-api.onrender.com/api';
 
 const CACHE_KEYS = {
   CHANNEL: 'amen_cache_channel_v1',
@@ -8,7 +12,42 @@ const CACHE_KEYS = {
 const CLIENT_CACHE_TTL = 15 * 60 * 1000; // 15 minutes
 
 /**
- * Retrieves cached initial data synchronously for 0ms instant initial paint.
+ * Resilient API fetcher with automatic fallback to production backend.
+ */
+async function requestApi(endpoint) {
+  try {
+    const res = await fetch(`${API_BASE_URL}${endpoint}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.success) return data;
+    }
+  } catch {
+    // If local fetch fails, try production fallback
+  }
+
+  if (API_BASE_URL !== FALLBACK_PROD_URL) {
+    try {
+      const prodRes = await fetch(`${FALLBACK_PROD_URL}${endpoint}`);
+      if (prodRes.ok) {
+        const prodData = await prodRes.json();
+        if (prodData && prodData.success) return prodData;
+      }
+    } catch {
+      // Production fallback failed
+    }
+  }
+
+  // Direct attempt on fallback for accurate error parsing
+  const finalRes = await fetch(`${FALLBACK_PROD_URL}${endpoint}`);
+  const finalData = await finalRes.json();
+  if (!finalRes.ok || !finalData.success) {
+    throw new Error(finalData.error?.message || `API request failed (Status ${finalRes.status})`);
+  }
+  return finalData;
+}
+
+/**
+ * Retrieves cached initial data synchronously for fast initial opening.
  */
 export function getCachedInitialData() {
   try {
@@ -40,12 +79,7 @@ export function getCachedInitialData() {
  * Fetches the configured AMEN channel details with client-side caching.
  */
 export async function fetchChannel() {
-  const response = await fetch(`${API_BASE_URL}/youtube/channel`);
-  const data = await response.json();
-
-  if (!response.ok || !data.success) {
-    throw new Error(data.error?.message || `Failed to fetch channel details (Status ${response.status})`);
-  }
+  const data = await requestApi('/youtube/channel');
 
   try {
     sessionStorage.setItem(
@@ -70,12 +104,7 @@ export async function fetchVideos({ pageToken, maxResults = 20 } = {}) {
   if (maxResults) params.set('maxResults', maxResults.toString());
   if (pageToken) params.set('pageToken', pageToken);
 
-  const response = await fetch(`${API_BASE_URL}/youtube/videos?${params.toString()}`);
-  const data = await response.json();
-
-  if (!response.ok || !data.success) {
-    throw new Error(data.error?.message || `Failed to fetch videos (Status ${response.status})`);
-  }
+  const data = await requestApi(`/youtube/videos?${params.toString()}`);
 
   const result = {
     videos: data.videos || [],
@@ -103,6 +132,5 @@ export async function fetchVideos({ pageToken, maxResults = 20 } = {}) {
  * Checks backend health.
  */
 export async function checkHealth() {
-  const response = await fetch(`${API_BASE_URL}/health`);
-  return response.json();
+  return requestApi('/health');
 }
