@@ -32,7 +32,7 @@ export default function Hero({ video, onWatch }) {
                 alt={video.title}
                 className="hero-image"
                 loading="eager"
-                fetchPriority="high"
+                fetchpriority="high"
                 decoding="async"
               />
             )}
